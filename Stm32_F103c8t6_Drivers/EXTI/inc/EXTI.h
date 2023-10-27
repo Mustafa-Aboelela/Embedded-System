@@ -14,7 +14,7 @@ typedef struct
 {
 
 	uint16_t         EXTI_Line_Number ;
-	GPIO_Typedef     GPIO_Port        ;
+	GPIO_Typedef*     GPIO_Port        ;
 	uint16_t         GPIO_pin         ;
     uint8_t          IVT_IRQ_Number   ;
 }EXTI_GPIO_mapping_t;

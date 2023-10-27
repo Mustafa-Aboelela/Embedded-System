@@ -4,8 +4,9 @@
  *  Created on: Oct 23, 2023
  *      Author: mustafa_3ela
  */
-#include "gpio.h"
 #include "EXTI.h"
+#include "gpio.h"
+
 
 /*
  * ================================================================================
@@ -25,11 +26,10 @@ void (*P_IRQ_CallBack[15])(void);                  //set the C function (ISR) on
  * ================================================================================
  */
 
-#define AFIO_GPIO_EXTI_MAPPING(x)		    ((x==GPIOA)?0: \
+#define AFIO_GPIO_EXTI_MAPPING(x)		   ((x==GPIOA)?0: \
 		                                    (x==GPIOB)?1: \
-				                            (x==GPIOC)?2: \
+		                            		(x==GPIOC)?2: \
 						                    (x==GPIOD)?3:0)
-
 
 
 
@@ -154,6 +154,22 @@ void UPDATE_EXTI(EXTI_PinConfig_t* EXTI_Config)
 	{
 		EXTI->RTSR |= (1<<EXTI_Config->EXTI_Pin.EXTI_Line_Number);
 		EXTI->RTSR |= (1<<EXTI_Config->EXTI_Pin.EXTI_Line_Number);
+
+	}
+	//update IRQ handler callback
+	P_IRQ_CallBack[EXTI_Config->EXTI_Pin.EXTI_Line_Number] = EXTI_Config->P_IRQ_CallBack ;
+
+	//Enable /Disable IRQ
+	if (EXTI_Config->IRQ_EN == EXTI_IRQ_ENABLE)
+	{
+		EXTI->IMR |= (1<<EXTI_Config->EXTI_Pin.EXTI_Line_Number);
+		NVIC_Enable(EXTI_Config->EXTI_Pin.EXTI_Line_Number);
+	}
+	else
+	{
+		EXTI->IMR &= ~(1<<EXTI_Config->EXTI_Pin.EXTI_Line_Number);
+		NVIC_DISABLE(EXTI_Config->EXTI_Pin.EXTI_Line_Number);
+
 
 	}
 

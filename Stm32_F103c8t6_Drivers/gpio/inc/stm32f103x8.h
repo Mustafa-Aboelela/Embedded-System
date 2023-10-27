@@ -7,6 +7,7 @@
 
 #ifndef INC_STM32F103X8_H_
 #define INC_STM32F103X8_H_
+#include <stdlib.h>
 #include <stdint.h>
 
 #define NULL  ((void*)0)
@@ -83,6 +84,8 @@ typedef struct {
 	volatile uint32_t APB1ENR;
 	volatile uint32_t BDCR;
 	volatile uint32_t CSR;
+	volatile uint32_t AHBSTR;
+	volatile uint32_t CFGR2;
 
 } RCC_Typedef;
 
@@ -91,37 +94,20 @@ typedef struct {
 typedef struct {
 	volatile uint32_t IMR;
 	volatile uint32_t EMR;
-	volatile uint32_t RSTR;
+	volatile uint32_t RTSR;
 	volatile uint32_t FTSR;
 	volatile uint32_t SWIER;
 	volatile uint32_t PR;
 
 } EXTI_Typedef;
 
-/*peripheral registers :RCC*/
 
-typedef struct {
-	volatile uint32_t CR;
-	volatile uint32_t CFGR;
-	volatile uint32_t CIR;
-	volatile uint32_t APB2RSTR;
-	volatile uint32_t APB1RSTR;
-	volatile uint32_t AHBENR;
-	volatile uint32_t APB2ENR;
-	volatile uint32_t APB1ENR;
-	volatile uint32_t BDCR;
-	volatile uint32_t CSR;
-
-} RCC_TypeDef;
 /*peripheral registers :AFIO*/
 
 typedef struct {
 	volatile uint32_t EVCR;
 	volatile uint32_t MAPR;
-	volatile uint32_t EXTICR1;
-	volatile uint32_t EXTICR2;
-	volatile uint32_t EXTICR3;
-	volatile uint32_t EXTICR4;
+	volatile uint32_t EXTICR[4];
 	uint32_t RESERVED;
 	volatile uint32_t MAPR2;
 
@@ -150,22 +136,14 @@ typedef struct {
 #define GPIOD      ((GPIO_Typedef *)GPIOD_BASE)
 #define GPIOE      ((GPIO_Typedef *)GPIOE_BASE)
 
-#define RCC        ((RCC_TypeDef  *)  RCC_BASE)
+#define RCC        ((RCC_Typedef  *)  RCC_BASE)
 
 #define AFIO       ((AFIO_Typedef *) AFIO_BASE)
 
-#define EXTI       ((EXTI_Typedef *) EXTI_BASE)
-
-#define SPI1      ((SPI_TypeDef  *) SPI1_BASE)
-#define SPI2      ((SPI_TypeDef  *) SPI2_BASE)
 
 
-/*=============================================================================================================*/
-//IVT
-////////////////
-//EXTI
-#define SPI1_IRQ                 35
-#define SPI2_IRQ                 36
+
+
 /******Clock enable macros*******/
 
 #define  RCC_GPIOA_CLK_EN()     (RCC->APB2ENR |= 1<<2)
@@ -175,23 +153,20 @@ typedef struct {
 #define  RCC_GPIOE_CLK_EN()     (RCC->APB2ENR |= 1<<6)
 
 #define  RCC_AFIO_CLK_EN()    (RCC->APB2ENR |= 1<<0)
-#define  RCC_SPI1_CLK_EN()    (RCC->APB2ENR |= 1<<12)
-#define  RCC_SPI2_CLK_EN()    (RCC->APB1ENR |= 1<<14)
-
-// RCC Reset SPI
-#define RCC_SPI1_Reset()	( RCC->APB2RSTR |= (1<<12) )
-#define RCC_SPI2_Reset()	( RCC->APB1RSTR |= (1<<14) )
 
 
 
-//*_*_*_*__*_*_*_*_*_*__*_________________
-//NVIC IRQ en/dis ableMACROS:
-//*_*_*_*_*_*_*_*_*_*_*_*_________________
 
-#define NVIC_IRQ35_SPI1_Enable      (NVIC_ISER1 |= 1<<(SPI1_IRQ-32))
-#define NVIC_IRQ36_SPI2_Enable      (NVIC_ISER1 |= 1<<(SPI2_IRQ-32))
-#define NVIC_IRQ35_SPI1_Disable     (NVIC_ICER1 |= 1<<(SPI1_IRQ-32))
-#define NVIC_IRQ36_SPI2_Disable     (NVIC_ICER1 |= 1<<(SPI2_IRQ-32))
+
+
+
+
+
+
+
+
+
+
 
 
 

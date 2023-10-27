@@ -7,6 +7,7 @@
 
 #ifndef INC_STM32F103X8_H_
 #define INC_STM32F103X8_H_
+#include <stdlib.h>
 #include <stdint.h>
 
 #define NULL  ((void*)0)
@@ -83,6 +84,8 @@ typedef struct {
 	volatile uint32_t APB1ENR;
 	volatile uint32_t BDCR;
 	volatile uint32_t CSR;
+	volatile uint32_t AHBSTR;
+	volatile uint32_t CFGR2;
 
 } RCC_Typedef;
 
@@ -91,37 +94,20 @@ typedef struct {
 typedef struct {
 	volatile uint32_t IMR;
 	volatile uint32_t EMR;
-	volatile uint32_t RSTR;
+	volatile uint32_t RTSR;
 	volatile uint32_t FTSR;
 	volatile uint32_t SWIER;
 	volatile uint32_t PR;
 
 } EXTI_Typedef;
 
-/*peripheral registers :RCC*/
 
-typedef struct {
-	volatile uint32_t CR;
-	volatile uint32_t CFGR;
-	volatile uint32_t CIR;
-	volatile uint32_t APB2RSTR;
-	volatile uint32_t APB1RSTR;
-	volatile uint32_t AHBENR;
-	volatile uint32_t APB2ENR;
-	volatile uint32_t APB1ENR;
-	volatile uint32_t BDCR;
-	volatile uint32_t CSR;
-
-} RCC_TypeDef;
 /*peripheral registers :AFIO*/
 
 typedef struct {
 	volatile uint32_t EVCR;
 	volatile uint32_t MAPR;
-	volatile uint32_t EXTICR1;
-	volatile uint32_t EXTICR2;
-	volatile uint32_t EXTICR3;
-	volatile uint32_t EXTICR4;
+	volatile uint32_t EXTICR[4];
 	uint32_t RESERVED;
 	volatile uint32_t MAPR2;
 
@@ -150,14 +136,14 @@ typedef struct {
 #define GPIOD      ((GPIO_Typedef *)GPIOD_BASE)
 #define GPIOE      ((GPIO_Typedef *)GPIOE_BASE)
 
-#define RCC        ((RCC_TypeDef  *)  RCC_BASE)
+#define RCC        ((RCC_Typedef  *)  RCC_BASE)
 
 #define AFIO       ((AFIO_Typedef *) AFIO_BASE)
 
 #define EXTI       ((EXTI_Typedef *) EXTI_BASE)
 
-#define SPI1      ((SPI_TypeDef  *) SPI1_BASE)
-#define SPI2      ((SPI_TypeDef  *) SPI2_BASE)
+#define SPI1       ((SPI_TypeDef  *) SPI1_BASE)
+#define SPI2       ((SPI_TypeDef  *) SPI2_BASE)
 
 
 /*=============================================================================================================*/
@@ -193,6 +179,51 @@ typedef struct {
 #define NVIC_IRQ35_SPI1_Disable     (NVIC_ICER1 |= 1<<(SPI1_IRQ-32))
 #define NVIC_IRQ36_SPI2_Disable     (NVIC_ICER1 |= 1<<(SPI2_IRQ-32))
 
+
+//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+//IVT MACROS:
+//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+
+#define EXTI0_IQR				6
+#define EXTI1_IQR				7
+#define EXTI2_IQR				8
+#define EXTI3_IQR				9
+#define EXTI4_IQR				10
+#define EXTI5_IQR				23
+#define EXTI6_IQR				23
+#define EXTI7_IQR				23
+#define EXTI8_IQR				23
+#define EXTI9_IQR				23
+#define EXTI10_IQR				40
+#define EXTI11_IQR				40
+#define EXTI12_IQR				40
+#define EXTI13_IQR				40
+#define EXTI14_IQR				40
+#define EXTI15_IQR				40
+
+
+
+
+//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+//NVIC enable/disable macros:
+//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+//enable
+#define NVIC_IRQ6_EXTI0_Enable			(NVIC_ISER0|=1<<6)
+#define NVIC_IRQ7_EXTI1_Enable			(NVIC_ISER0|=1<<7)
+#define NVIC_IRQ8_EXTI2_Enable			(NVIC_ISER0|=1<<8)
+#define NVIC_IRQ9_EXTI3_Enable			(NVIC_ISER0|=1<<9)
+#define NVIC_IRQ10_EXTI4_Enable			(NVIC_ISER0|=1<<10)
+#define NVIC_IRQ23_EXTI5_9_Enable		(NVIC_ISER0|=1<<23)
+#define NVIC_IRQ40_EXTI10_15_Enable		(NVIC_ISER1|=1<<8)
+
+//disable
+#define NVIC_IRQ6_EXTI0_Disable			(NVIC_ICER0|=1<<6)
+#define NVIC_IRQ7_EXTI1_Disable			(NVIC_ICER0|=1<<7)
+#define NVIC_IRQ8_EXTI2_Disable			(NVIC_ICER0|=1<<8)
+#define NVIC_IRQ9_EXTI3_Disable			(NVIC_ICER0|=1<<9)
+#define NVIC_IRQ10_EXTI4_Disable		(NVIC_ICER0|=1<<10)
+#define NVIC_IRQ23_EXTI5_9_Disable		(NVIC_ICER0|=1<<23)
+#define NVIC_IRQ40_EXTI10_15_Disable	(NVIC_ICER1|=1<<8)
 
 
 

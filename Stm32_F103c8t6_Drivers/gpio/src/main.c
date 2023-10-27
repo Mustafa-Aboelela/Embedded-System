@@ -18,7 +18,7 @@
 
 
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
-  #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
+#warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
 
 #include "stm32f103x8.h"
@@ -66,26 +66,26 @@ void wait_ms(uint32_t time)
 
 int main(void)
 {
-clock_init();
-GPIO_Init();
-while(1)
-{
-	//pa1 pu
-if (MCAL_GPIO_ReadPin(GPIOA,GPIO_PIN_1)==0)  //PRESS
-{
-	MCAL_GPIO_TogglePin(GPIOB,GPIO_PIN_1);
-	while(MCAL_GPIO_ReadPin(GPIOA,GPIO_PIN_1)==0); //single press
-}
-//pa13 is pd
-if (MCAL_GPIO_ReadPin(GPIOA,GPIO_PIN_13)==1) //multi press
-{
-	MCAL_GPIO_TogglePin(GPIOB,GPIO_PIN_13);
+	clock_init();
+	GPIO_Init();
+	while(1)
+	{
+		//pa1 pu
+		if (MCAL_GPIO_ReadPin(GPIOA,GPIO_PIN_1)==0)  //PRESS
+		{
+			MCAL_GPIO_TogglePin(GPIOB,GPIO_PIN_1);
+			while(MCAL_GPIO_ReadPin(GPIOA,GPIO_PIN_1)==0); //single press
+		}
+		//pa13 is pd
+		if (MCAL_GPIO_ReadPin(GPIOA,GPIO_PIN_13)==1) //multi press
+		{
+			MCAL_GPIO_TogglePin(GPIOB,GPIO_PIN_13);
 
-}
-wait_ms(1);
-}
+		}
+		wait_ms(1);
+	}
 
-
+return 0;
 }
 
 
